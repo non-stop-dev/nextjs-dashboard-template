@@ -1,3 +1,4 @@
+// app/layout.tsx
 import { Inter } from 'next/font/google';
 import "./globals.css";
 
@@ -5,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: "MediLeon",
-  description: "MediLeon Application",
+  title: "Sifrex",
+  description: "Sifrex Research",
 };
 
 // Root layout should only handle the HTML shell and global setup
@@ -15,6 +16,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  console.log('RENDER: app/layout.tsx (Root Layout)'); // <--- LOG AÑADIDO
   return (
     <html suppressHydrationWarning>
       <head>

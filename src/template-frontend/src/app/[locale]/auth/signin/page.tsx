@@ -1,8 +1,9 @@
+// app/[locale]/auth/signin/page.tsx
 'use client'
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation' // Removed useParams as it's not strictly needed for the fix
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
@@ -12,23 +13,22 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Mail, Lock } from 'lucide-react'
 import GoogleIcon from '@/assets/icons/google.svg'
-import React from 'react' // Import React to use React.use()
+import React from 'react'
 
-// Adjust the type of params here to reflect it's a Promise
+// Ajusta el tipo de params para reflejar que es una Promise
 export default function SignInPage({ params }: { params: Promise<{ locale: string }> }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Unwrap the params Promise
+  // DESENVUELVE la Promesa params usando React.use()
   const resolvedParams = React.use(params);
-  const { locale } = resolvedParams; // Destructure locale from the resolved object
+  const { locale } = resolvedParams; // Destructura locale del objeto resuelto
   
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || `/${locale}/dashboard` // Use the unwrapped locale
-
+  const callbackUrl = searchParams.get('callbackUrl') || `/${locale}/dashboard`
   const handleCredentialsSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -44,6 +44,8 @@ export default function SignInPage({ params }: { params: Promise<{ locale: strin
       if (result?.error) {
         setError('Invalid credentials. Please try again.')
       } else {
+        // Asegúrate de que router.push maneje el locale correctamente si callbackUrl no lo tiene.
+        // Pero tu callbackUrl ya lo incluye, así que está bien.
         router.push(callbackUrl)
       }
     } catch (error) {
@@ -56,7 +58,8 @@ export default function SignInPage({ params }: { params: Promise<{ locale: strin
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn('google', { callbackUrl })
+      // callbackUrl ya incluye el locale, lo cual es correcto.
+      await signIn('google', { callbackUrl }) 
     } catch (error) {
       setError('Failed to sign in with Google')
       setIsLoading(false)
@@ -64,6 +67,7 @@ export default function SignInPage({ params }: { params: Promise<{ locale: strin
   }
 
   return (
+    // Contenido JSX de tu página de login (como lo tienes ahora)
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
