@@ -1,3 +1,6 @@
+// File: /src/app/[locale]/auth/signup/page.tsx
+// User registration page with Next.js 15 params handling
+
 'use client'
 
 import { useState } from 'react'
@@ -12,9 +15,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Mail, Lock, User } from 'lucide-react'
 import GoogleIcon from '@/assets/icons/google.svg'
-import { signup } from '@/app/actions/auth'
+import { signup } from '@/lib/actions/auth'
+import React from 'react' // Import React to use React.use()
 
-export default function SignUpPage({ params }: { params: { locale: string } }) {
+// Adjust the type of params here to reflect it's a Promise
+export default function SignUpPage({ params }: { params: Promise<{ locale: string }> }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -25,6 +30,10 @@ export default function SignUpPage({ params }: { params: { locale: string } }) {
     password?: string[]
   }>({})
   const [isLoading, setIsLoading] = useState(false)
+
+  // Unwrap the params Promise using React.use()
+  const resolvedParams = React.use(params)
+  const { locale } = resolvedParams // Destructure locale from the resolved object
   
   const router = useRouter()
 
@@ -46,12 +55,20 @@ export default function SignUpPage({ params }: { params: { locale: string } }) {
       if (result?.errors) {
         setFieldErrors(result.errors)
       } else if (result?.message) {
-        setError(result.message)
+        // Check if it's a success message or error message
+        if (result.message.includes('successfully')) {
+          // Success - redirect to signin with success message
+          router.push(`/${locale}/auth/signin?message=${encodeURIComponent(result.message)}`)
+        } else {
+          // Error message
+          setError(result.message)
+        }
       } else {
-        // Success - redirect to signin
-        router.push(`/${params.locale}/auth/signin?message=Account created successfully`)
+        // Fallback success case
+        router.push(`/${locale}/auth/signin?message=${encodeURIComponent('Account created successfully! Please sign in.')}`)
       }
     } catch (error) {
+      console.error('Signup error:', error)
       setError('An unexpected error occurred. Please try again.')
     } finally {
       setIsLoading(false)
@@ -62,9 +79,10 @@ export default function SignUpPage({ params }: { params: { locale: string } }) {
     setIsLoading(true)
     try {
       await signIn('google', { 
-        callbackUrl: `/${params.locale}/dashboard` 
+        callbackUrl: `/${locale}/dashboard` 
       })
     } catch (error) {
+      console.error('Google signin error:', error)
       setError('Failed to sign in with Google')
       setIsLoading(false)
     }
@@ -201,7 +219,7 @@ export default function SignUpPage({ params }: { params: { locale: string } }) {
           <div className="text-sm text-center text-muted-foreground">
             Already have an account?{' '}
             <Link
-              href={`/${params.locale}/auth/signin`}
+              href={`/${locale}/auth/signin`}
               className="font-medium text-primary hover:underline"
             >
               Sign in
