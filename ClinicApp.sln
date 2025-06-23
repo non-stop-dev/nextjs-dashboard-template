@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicApp.Server", "src\ClinicApp.Server\ClinicApp.Server.csproj", "{FE83E5C0-6F18-44C4-B786-1CC86F1E69DA}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ClinicApp.Interface", "src\ClinicApp.Interface\", "{92FF16EE-BE1A-4870-970F-0E13F6C61E97}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_55615"
+		Debug.AspNetCompiler.PhysicalPath = "ClinicApp.Interface\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_55615\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_55615"
+		Release.AspNetCompiler.PhysicalPath = "ClinicApp.Interface\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_55615\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "55615"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE83E5C0-6F18-44C4-B786-1CC86F1E69DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE83E5C0-6F18-44C4-B786-1CC86F1E69DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE83E5C0-6F18-44C4-B786-1CC86F1E69DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE83E5C0-6F18-44C4-B786-1CC86F1E69DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92FF16EE-BE1A-4870-970F-0E13F6C61E97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92FF16EE-BE1A-4870-970F-0E13F6C61E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92FF16EE-BE1A-4870-970F-0E13F6C61E97}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{92FF16EE-BE1A-4870-970F-0E13F6C61E97}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FE83E5C0-6F18-44C4-B786-1CC86F1E69DA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{92FF16EE-BE1A-4870-970F-0E13F6C61E97} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6CE88F40-9097-4FDC-94E1-C759F191294A}
+	EndGlobalSection
+EndGlobal
