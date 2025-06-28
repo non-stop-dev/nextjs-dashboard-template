@@ -82,7 +82,7 @@ export default {
   ],
   
   pages: {
-    signIn: '/auth/signin',
+    signIn: '/signin',
     // signUp no existe en NextAuth, usaremos ruta custom
   },
   

@@ -159,14 +159,14 @@ export default function SignInPage({ params }: { params: Promise<{ locale: strin
           <div className="text-sm text-center text-muted-foreground">
             Don't have an account?{' '}
             <Link
-              href={`/${locale}/auth/signup`}
+              href={`/${locale}/signup`}
               className="font-medium text-primary hover:underline"
             >
               Sign up
             </Link>
           </div>
           <Link
-            href={`/${locale}/auth/forgot-password`}
+            href={`/${locale}/forgot-password`}
             className="text-sm text-center text-muted-foreground hover:underline"
           >
             Forgot your password?

@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "node scripts/check-production-security.js && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "security-check": "node scripts/check-production-security.js"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",

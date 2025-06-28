@@ -21,8 +21,17 @@ export const verifySession = cache(async () => {
   console.log('DAL: verifySession called');
 
   // --- LÓGICA DE BYPASS PARA DESARROLLO (NUNCA EN PRODUCCIÓN) ---
-  // Activa este bypass estableciendo DEV_DAL_BYPASS=true en tu .env.local
-  if (process.env.NODE_ENV === 'development' && process.env.DEV_DAL_BYPASS === 'true') {
+  // STRICT security conditions to prevent accidental production bypass
+  const isDevelopmentBypass = (
+    process.env.NODE_ENV === 'development' && 
+    process.env.DEV_DAL_BYPASS === 'true' &&
+    process.env.DATABASE_URL?.includes('localhost') && // Must be local DB
+    !process.env.VERCEL_ENV && // Not on Vercel
+    !process.env.RAILWAY_ENVIRONMENT && // Not on Railway
+    !process.env.HEROKU_APP_NAME // Not on Heroku
+  );
+  
+  if (isDevelopmentBypass) {
     // En este escenario, como no hay DB conectada, estos son IDs/emails simulados en memoria.
     const devUserId = process.env.DEV_USER_ID || 'dev-dal-user-id-default';
     const devUserEmail = process.env.DEV_USER_EMAIL || 'dev-dal-default@example.com';
@@ -43,7 +52,7 @@ export const verifySession = cache(async () => {
 
   if (!session?.user?.id) {
     console.log('DAL: verifySession - No session found. Redirecting to /es/auth/signin');
-    redirect('/es/auth/signin'); // Redirige a la página de login con el locale correcto
+    redirect('/es/signin'); // Redirige a la página de login con el locale correcto
   }
 
   console.log('DAL: verifySession - Sesión válida para usuario:', session.user.id);

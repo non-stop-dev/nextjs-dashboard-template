@@ -28,10 +28,10 @@ const defaultLocale = 'es';   // Idioma por defecto
 // Aun así, la lógica de autenticación real de estas páginas (ej. registro, login)
 // debe manejar la sesión de forma segura y validar las credenciales en el backend.
 const publicRoutes = [
-  '/auth/signin',
-  '/auth/signup',
-  '/auth/forgot-password',
-  '/auth/reset-password',
+  '/signin',
+  '/signup',
+  '/forgot-password',
+  '/reset-password',
 ];
 
 // --- Funciones Auxiliares ---
@@ -55,7 +55,19 @@ function getPathnameWithoutLocale(pathname: string): string {
 // --- Lógica Principal del Middleware ---
 export default auth((request: NextRequest & { auth: any }) => {
   const { pathname } = request.nextUrl;
-  const isAuthenticated = !!request.auth; // 'request.auth' viene de next-auth o tu solución similar
+  
+  // Development bypass - STRICT conditions for security
+  const isDevelopmentBypass = (
+    process.env.NODE_ENV === 'development' && 
+    process.env.DEV_DAL_BYPASS === 'true' &&
+    process.env.DATABASE_URL?.includes('localhost') // Extra safety check
+  );
+  
+  if (isDevelopmentBypass) {
+    console.log('🚨 DEV BYPASS ACTIVE - Remove DEV_DAL_BYPASS for production!');
+  }
+  
+  const isAuthenticated = !!request.auth || isDevelopmentBypass;
 
   // --- 1. Mitigación de Cabeceras Maliciosas (CVE-2025-29927 y defensa en profundidad) ---
   // Clonar los headers para modificarlos de forma segura.
@@ -102,7 +114,7 @@ export default auth((request: NextRequest & { auth: any }) => {
     // Si no es una ruta pública Y el usuario NO está autenticado,
     // redirige optimista y rápidamente a la página de inicio de sesión.
     // Esta es una medida de UX, no de seguridad infranqueable.
-    const loginUrl = new URL(`/${currentLocale}/auth/signin`, request.url);
+    const loginUrl = new URL(`/${currentLocale}/signin`, request.url);
     // Guarda la URL original para redirigir después del login (validar esto en el login!)
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);

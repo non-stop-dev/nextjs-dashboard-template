@@ -1,13 +1,13 @@
-// // components/auth/session-provider.tsx (o la ruta correcta)
-// 'use client'; // ¡Importante! Este componente debe ser un Client Component
+// components/auth/session-provider.tsx
+'use client'; // ¡Importante! Este componente debe ser un Client Component
 
-// import { SessionProvider as NextAuthSessionProvider } from 'next-auth/react';
-// import React from 'react';
+import { SessionProvider as NextAuthSessionProvider } from 'next-auth/react';
+import React from 'react';
 
-// export function SessionProvider({ children }: { children: React.ReactNode }) {
-//   return (
-//     <NextAuthSessionProvider>
-//       {children}
-//     </NextAuthSessionProvider>
-//   );
-// }
+export function SessionProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <NextAuthSessionProvider>
+      {children}
+    </NextAuthSessionProvider>
+  );
+}
