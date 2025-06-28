@@ -37,7 +37,7 @@ const publicRoutes = [
 // --- Funciones Auxiliares ---
 
 // Determina el locale a usar (aquí simplificado, puedes usar `accept-language` header para más inteligencia)
-function getLocale(request: NextRequest): string {
+function getLocale(): string {
   // Aquí podrías implementar lógica más sofisticada para detectar el idioma
   // basándote en el header 'Accept-Language' o cookies.
   return defaultLocale;
@@ -53,7 +53,7 @@ function getPathnameWithoutLocale(pathname: string): string {
 }
 
 // --- Lógica Principal del Middleware ---
-export default auth((request: NextRequest & { auth: any }) => {
+export default auth((request: NextRequest & { auth: unknown }) => {
   const { pathname } = request.nextUrl;
   
   // Development bypass - STRICT conditions for security
@@ -76,16 +76,9 @@ export default auth((request: NextRequest & { auth: any }) => {
   modifiedHeaders.delete('x-forwarded-middleware');
   // Considera eliminar cualquier otro header interno que no deba exponerse o manipularse.
 
-  // Recrear la solicitud con los headers limpios.
-  // IMPORTANTE: Si el body de la solicitud va a ser leído más adelante (ej. en una API route POST),
-  // y ya ha sido leído por alguna lógica en este middleware, necesitarás clonar el body Stream.
-  // Para la eliminación de headers, normalmente no se consume el body aquí.
-  const cleanRequest = new Request(request.url, {
-    method: request.method,
-    headers: modifiedHeaders,
-    body: request.body, // Pasa el body original si no lo has consumido
-    duplex: 'half', // Necesario para 'POST' requests si pasas 'body'
-  });
+  // Headers are cleaned for security
+  // Note: If you need to use cleaned headers later, you can recreate the request
+  // const cleanRequest = new Request(request.url, { method: request.method, headers: modifiedHeaders, body: request.body, duplex: 'half' });
 
   // --- 2. Manejo de Internacionalización (i18n) ---
   const pathnameHasLocale = locales.some(
@@ -94,7 +87,7 @@ export default auth((request: NextRequest & { auth: any }) => {
 
   const currentLocale = pathnameHasLocale
     ? pathname.split('/')[1]
-    : getLocale(request); // Si la URL no tiene locale, detecta uno
+    : getLocale(); // Si la URL no tiene locale, detecta uno
 
   // Redirige si la URL no tiene un locale (ej. /dashboard -> /es/dashboard)
   if (!pathnameHasLocale) {

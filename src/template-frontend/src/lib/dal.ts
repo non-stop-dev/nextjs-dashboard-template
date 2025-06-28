@@ -253,63 +253,31 @@ export async function getAdminData() {
 }
 
 /**
- * HIPAA-compliant data access pattern
- * Use for healthcare SaaS applications
+ * Example: Secure data access pattern for SaaS applications
+ * Customize this for your specific business logic
  */
-export async function getHIPAACompliantData(patientId: string) {
-  const { userId, userRole } = await verifySession(); // verifySession ya maneja bypass
+export async function getBusinessData(resourceId: string) {
+  const { userId } = await verifySession();
 
-  // Realizar comprobaciones adicionales de HIPAA
-  const hasAccess = await verifyHIPAAAccess(userId, patientId);
-  if (!hasAccess) {
-    // Registrar el intento de acceso para el rastro de auditoría
-    console.warn(`HIPAA: Unauthorized access attempt by user ${userId} to patient ${patientId}`);
-    redirect('/unauthorized');
-  }
-
-  // Registrar el acceso en el log de auditoría
-  await logHIPAAAccess(userId, patientId, 'READ');
-
-  return getSecureData(async (userId) => {
-    // Cuando no hay DB, la consulta a Prisma fallará.
-    // Para desarrollo con bypass, podemos simular datos PHI aquí.
+  return getSecureData(async () => {
+    // Example: Get business-specific data
     if (process.env.NODE_ENV === 'development' && process.env.DEV_DAL_BYPASS === 'true' && !prisma) {
-        console.warn(`DAL: getHIPAACompliantData - No DB connected or bypass active. Returning simulated PHI.`);
+        console.warn(`DAL: getBusinessData - No DB connected or bypass active. Returning simulated data.`);
         return {
-            id: patientId,
-            name: 'Simulated Patient',
-            diagnosis: 'Simulated Diagnosis',
-            // ... otros campos PHI simulados
+            id: resourceId,
+            name: 'Simulated Resource',
+            data: 'Sample business data',
         };
     }
 
-    // Devolver solo los datos PHI necesarios y autorizados
-    return await prisma.user.findUnique({ // O tu modelo de Patient
-      where: { id: patientId },
+    // Return business data with proper authorization
+    return await prisma.user.findUnique({
+      where: { id: resourceId },
       select: {
-        // Solo devolver los campos que este usuario está autorizado a ver
         id: true,
         name: true,
-        // ... otros campos autorizados de PHI
+        // Add your business-specific fields here
       },
     });
   });
-}
-
-// Funciones auxiliares para el cumplimiento de HIPAA
-async function verifyHIPAAAccess(userId: string, patientId: string): Promise<boolean> {
-  // En desarrollo con bypass y sin DB, puedes simular acceso.
-  if (process.env.NODE_ENV === 'development' && process.env.DEV_DAL_BYPASS === 'true' && !prisma) {
-      return true; // Simula acceso permitido en desarrollo sin DB
-  }
-  // ¡¡¡ IMPORTANTE: Implementa tu lógica de control de acceso HIPAA aquí !!!
-  // Comprobar si el usuario tiene una necesidad legítima de acceder a los datos de este paciente
-  // Esto debe ser MUY robusto.
-  return true; // Placeholder: ¡Reemplazar con lógica real!
-}
-
-async function logHIPAAAccess(userId: string, patientId: string, action: string) {
-  // Registrar todo acceso a PHI para el rastro de auditoría (requisito de HIPAA)
-  console.log(`HIPAA ACCESS LOG: User ${userId} performed ${action} on patient ${patientId} at ${new Date().toISOString()}`);
-  // En producción, almacenar en una tabla de auditoría dedicada y segura.
 }

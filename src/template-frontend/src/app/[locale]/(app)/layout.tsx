@@ -6,7 +6,6 @@
 // 4. Manejo del locale.
 
 import { redirect } from 'next/navigation';
-import { auth } from '@/../auth'; // Asegúrate de que esta ruta sea correcta para tu next-auth config
 import { verifySession } from '@/lib/dal'; // Importa tu función de verificación de sesión del DAL
 import { SessionProvider } from '@/components/auth/session-provider'; // Componente necesario para `useSession` en Client Components
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
@@ -43,7 +42,7 @@ export default async function AppProtectedLocaleLayout({ // O el nombre que le h
   // si el usuario no está autenticado o la sesión es inválida.
   // Si esta función lanza un redirect, el resto de este componente NO se ejecutará.
   console.log('CALL: verifySession from app/[locale]/layout.tsx'); // <--- LOG AÑADIDO
-  const { isAuth, userId, userRole } = await verifySession(); //
+  const { isAuth, userId } = await verifySession(); //
 
   // Si llegamos aquí, significa que `verifySession()` ha validado exitosamente la sesión
   // y el usuario está autenticado. Ahora podemos renderizar el layout completo de la aplicación.

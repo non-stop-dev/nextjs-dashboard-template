@@ -4,6 +4,7 @@ import Credentials from 'next-auth/providers/credentials'
 import { SigninFormSchema } from '@/lib/definitions'
 import bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
+import { checkRateLimit } from '@/lib/rate-limiting'
 
 const prisma = new PrismaClient()
 
@@ -35,11 +36,23 @@ export default {
           const parsedCredentials = SigninFormSchema.safeParse(credentials)
 
           if (!parsedCredentials.success) {
-            console.log('Invalid credentials format')
+            // SECURITY: Don't log sensitive validation errors in production
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Invalid credentials format')
+            }
             return null
           }
 
           const { email, password } = parsedCredentials.data
+          
+          // SECURITY: Rate limiting to prevent brute force attacks
+          const rateLimitResult = checkRateLimit(email);
+          if (!rateLimitResult.allowed) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`Rate limit exceeded for ${email}`);
+            }
+            return null;
+          }
           
           // Find user in database
           const user = await prisma.user.findUnique({
@@ -54,7 +67,9 @@ export default {
           })
 
           if (!user || !user.password) {
-            console.log('User not found or no password set')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('User not found or no password set')
+            }
             return null
           }
 
@@ -62,7 +77,9 @@ export default {
           const passwordsMatch = await bcrypt.compare(password, user.password)
           
           if (!passwordsMatch) {
-            console.log('Password does not match')
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Password does not match')
+            }
             return null
           }
 

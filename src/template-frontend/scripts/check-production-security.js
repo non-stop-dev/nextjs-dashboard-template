@@ -22,12 +22,24 @@ function checkEnvFile(filePath, fileName) {
       hasSecurityIssues = true;
     }
     
-    if (content.includes('NODE_ENV=development')) {
-      console.log(`⚠️  WARNING: ${fileName} sets NODE_ENV=development`);
+    if (content.includes('NODE_ENV=development') && fileName === '.env.production') {
+      console.log(`❌ SECURITY ISSUE: ${fileName} sets NODE_ENV=development`);
+      hasSecurityIssues = true;
     }
     
     if (content.includes('localhost') && fileName === '.env.production') {
       console.log(`⚠️  WARNING: ${fileName} contains localhost URLs`);
+    }
+    
+    // Check for weak secrets
+    if (content.includes('dev-secret-key') || content.includes('change-in-production')) {
+      console.log(`❌ SECURITY ISSUE: ${fileName} contains weak NEXTAUTH_SECRET`);
+      hasSecurityIssues = true;
+    }
+    
+    // Check for default credentials
+    if (content.includes('username:password@localhost')) {
+      console.log(`⚠️  WARNING: ${fileName} contains default database credentials`);
     }
   }
 }

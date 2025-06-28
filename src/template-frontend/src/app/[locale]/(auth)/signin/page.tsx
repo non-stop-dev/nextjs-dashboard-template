@@ -28,7 +28,21 @@ export default function SignInPage({ params }: { params: Promise<{ locale: strin
   
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || `/${locale}/dashboard`
+  
+  // SECURITY: Validate callback URL to prevent open redirects
+  const validateCallbackUrl = (url: string | null): string => {
+    if (!url) return `/${locale}/dashboard`;
+    
+    // Only allow relative URLs starting with the current locale
+    if (url.startsWith(`/${locale}/`) && !url.includes('://')) {
+      return url;
+    }
+    
+    // Fallback to dashboard if invalid
+    return `/${locale}/dashboard`;
+  }
+  
+  const callbackUrl = validateCallbackUrl(searchParams.get('callbackUrl'))
   const handleCredentialsSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -48,7 +62,7 @@ export default function SignInPage({ params }: { params: Promise<{ locale: strin
         // Pero tu callbackUrl ya lo incluye, así que está bien.
         router.push(callbackUrl)
       }
-    } catch (error) {
+    } catch {
       setError('An unexpected error occurred. Please try again.')
     } finally {
       setIsLoading(false)
@@ -60,7 +74,7 @@ export default function SignInPage({ params }: { params: Promise<{ locale: strin
     try {
       // callbackUrl ya incluye el locale, lo cual es correcto.
       await signIn('google', { callbackUrl }) 
-    } catch (error) {
+    } catch {
       setError('Failed to sign in with Google')
       setIsLoading(false)
     }
@@ -157,7 +171,7 @@ export default function SignInPage({ params }: { params: Promise<{ locale: strin
 
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-center text-muted-foreground">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link
               href={`/${locale}/signup`}
               className="font-medium text-primary hover:underline"
