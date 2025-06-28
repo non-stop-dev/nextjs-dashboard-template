@@ -1,35 +1,50 @@
-# Visual Studio
-.vs
-.user
-.suo
-.sln.docstates
+ # Dependencies
+  node_modules/
 
-# .NET Core
-bin
-obj
-.csproj.user
+  # Next.js (Frontend)
+  sifrex-frontend/.next/
+  sifrex-frontend/out/
+  sifrex-frontend/dist/
+  sifrex-frontend/build/
 
-# Node.js  Next.js
-node_modules
-.next
-out
-npm-debug.log
-yarn-error.log
+  # Backend build outputs
+  sifrex-backend/bin/
+  sifrex-backend/obj/
+  sifrex-backend/dist/
 
-# Logs
-.log
-logs
+  # Environment files
+  .env
+  .env.local
+  .env.development
+  .env.production
+  **/.env.local
+  **/.env.development
+  **/.env.production
 
-# Build output
-dist
-build
+  # Logs
+  *.log
+  logs/
+  npm-debug.log*
+  yarn-debug.log*
+  yarn-error.log*
 
-# Environment files
-.env
-.env.local
-.env.development
-.env.production
+  # OS files
+  .DS_Store
+  Thumbs.db
 
-# OS generated files
-.DS_Store
-Thumbs.db
+  # IDE files
+  .vscode/
+  .idea/
+  *.suo
+  *.user
+
+  # Claude specific
+  CLAUDE.md
+  .claude
+  .claude/
+  **/.claude
+  **/CLAUDE.md
+
+  # AI generated files
+  *.ai-generated
+  .ai-cache/
