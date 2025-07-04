@@ -1,50 +1,144 @@
- # Dependencies
-  node_modules/
+# === SIFREX WEB APP ===
 
-  # Next.js (Frontend)
-  sifrex-frontend/.next/
-  sifrex-frontend/out/
-  sifrex-frontend/dist/
-  sifrex-frontend/build/
+# Files ignored
+docs/
 
-  # Backend build outputs
-  sifrex-backend/bin/
-  sifrex-backend/obj/
-  sifrex-backend/dist/
+# Claude
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+.mcp.json
 
-  # Environment files
-  .env
-  .env.local
-  .env.development
-  .env.production
-  **/.env.local
-  **/.env.development
-  **/.env.production
+# AI generated files (but keep CLAUDE.md)
+*.ai-generated
+.ai-cache/
 
-  # Logs
-  *.log
-  logs/
-  npm-debug.log*
-  yarn-debug.log*
-  yarn-error.log*
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+jspm_packages/
 
-  # OS files
-  .DS_Store
-  Thumbs.db
+# Next.js build outputs
+sifrex-frontend/.next/
+sifrex-frontend/out/
+sifrex-frontend/dist/
+sifrex-frontend/build/
+.next/
+out/
+dist/
+build/
 
-  # IDE files
-  .vscode/
-  .idea/
-  *.suo
-  *.user
+# Backend build outputs
+sifrex-backend/bin/
+sifrex-backend/obj/
+sifrex-backend/dist/
 
-  # Claude specific
-  CLAUDE.md
-  .claude
-  .claude/
-  **/.claude
-  **/CLAUDE.md
+# Environment files
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test.local
+.env.production
+.env.production.local
+.env.*.local
+**/.env.local
+**/.env.development
+**/.env.production
 
-  # AI generated files
-  *.ai-generated
-  .ai-cache/
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage and testing
+coverage/
+*.lcov
+.nyc_output
+.jest/
+
+# TypeScript
+*.tsbuildinfo
+
+# Cache directories
+.npm
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.cache
+.parcel-cache
+
+# Optional files
+.node_repl_history
+*.tgz
+.yarn-integrity
+
+# Build tools
+.nuxt
+.turbo/
+.vercel
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Prisma generated files
+/sifrex-frontend/src/generated/prisma
+
+# Backup files
+package.json.backup
+*.backup
+
+# Storybook
+.out
+.storybook-out
+
+# PWA files
+**/public/sw.js
+**/public/workbox-*.js
+**/public/worker-*.js
+**/public/fallback-*.js
+
+# Sentry
+.sentryclirc
