@@ -47,7 +47,7 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   password      String?   // For email/password auth
-  role          Role      @default(USER)
+  role          Role      @default(BASIC)
   
   // Timestamps for HIPAA compliance
   createdAt     DateTime  @default(now()) @map("created_at")
@@ -69,7 +69,10 @@ model VerificationToken {
 }
 
 enum Role {
-  USER
+  BASIC
+  PLUS
+  PREMIUM
+  PREMIUM_PLUS
   ADMIN
   SUPER_ADMIN
 }

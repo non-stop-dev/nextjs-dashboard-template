@@ -6,7 +6,7 @@
 // 4. Manejo del locale.
 
 import { redirect } from 'next/navigation';
-import { verifySession } from '@/lib/dal'; // Importa tu función de verificación de sesión del DAL
+import { verifySession } from '@/lib/auth/dal'; // Importa tu función de verificación de sesión del DAL
 import { SessionProvider } from '@/components/auth/session-provider'; // Componente necesario para `useSession` en Client Components
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";

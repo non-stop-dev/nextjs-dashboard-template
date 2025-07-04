@@ -1,12 +1,10 @@
 import type { NextAuthConfig } from 'next-auth'
 import Google from 'next-auth/providers/google'
 import Credentials from 'next-auth/providers/credentials'
-import { SigninFormSchema } from '@/lib/definitions'
+import { SigninFormSchema } from '@/lib/auth/definitions'
 import bcrypt from 'bcryptjs'
-import { PrismaClient } from '@prisma/client'
-import { checkRateLimit } from '@/lib/rate-limiting'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/auth/prisma'
+import { checkRateLimit } from '@/lib/auth/rate-limiting'
 
 export default {
   providers: [

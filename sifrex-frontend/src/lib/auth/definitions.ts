@@ -46,7 +46,7 @@ export type User = {
   id: string
   name: string | null
   email: string
-  role: 'USER' | 'ADMIN' | 'SUPER_ADMIN'
+  role: 'BASIC' | 'PLUS' | 'PREMIUM' | 'PREMIUM_PLUS' | 'ADMIN' | 'SUPER_ADMIN'
 }
 
 // Extend NextAuth types

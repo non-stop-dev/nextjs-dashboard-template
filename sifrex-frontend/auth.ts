@@ -1,9 +1,18 @@
 import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/auth/prisma'
 import authConfig from './auth.config'
 
-const prisma = new PrismaClient()
+// Database connection validation
+const isDatabaseConnected = async () => {
+  try {
+    await prisma.$connect()
+    return true
+  } catch (error) {
+    console.error('Database connection failed:', error)
+    return false
+  }
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -17,3 +26,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   ...authConfig,
 })
+
+// Export database connection check for development
+export { isDatabaseConnected }

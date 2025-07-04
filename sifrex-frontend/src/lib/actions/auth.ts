@@ -5,9 +5,9 @@
 
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
-import { SignupFormSchema, type FormState } from '@/lib/definitions'
-import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
+import { SignupFormSchema, type FormState } from '@/lib/auth/definitions'
+import { prisma } from '@/lib/auth/prisma'
+import { Prisma, Role } from '@prisma/client'
 
 /**
  * Server Action: User Registration
@@ -64,7 +64,7 @@ export async function signup(
         name,
         email,
         password: hashedPassword,
-        role: 'USER', // Default role for new registrations
+        role: Role.BASIC, // Default role for new registrations
       },
       select: {
         id: true,

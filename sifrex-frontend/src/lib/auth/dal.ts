@@ -5,10 +5,11 @@
 'use server'
 
 import { auth } from '@/../auth' // Asegúrate de que esta ruta sea correcta
-import { prisma } from '@/lib/prisma' // Asegúrate de que esta ruta sea correcta
+import { prisma } from '@/lib/auth/prisma' // Asegúrate de que esta ruta sea correcta
 import { cache } from 'react'
 import { redirect } from 'next/navigation'
-import type { User } from '@/lib/definitions' // Asegúrate de que esta ruta sea correcta y el tipo User esté bien definido
+import type { User } from '@/lib/auth/definitions' // Asegúrate de que esta ruta sea correcta y el tipo User esté bien definido
+import { Role } from '@prisma/client'
 
 /**
  * CRITICAL: This is your PRIMARY security boundary
@@ -35,7 +36,7 @@ export const verifySession = cache(async () => {
     // En este escenario, como no hay DB conectada, estos son IDs/emails simulados en memoria.
     const devUserId = process.env.DEV_USER_ID || 'dev-dal-user-id-default';
     const devUserEmail = process.env.DEV_USER_EMAIL || 'dev-dal-default@example.com';
-    const devUserRole = (process.env.DEV_USER_ROLE as 'USER' | 'ADMIN' | 'SUPER_ADMIN') || 'ADMIN';
+    const devUserRole = (process.env.DEV_USER_ROLE as 'BASIC' | 'PLUS' | 'PREMIUM' | 'PREMIUM_PLUS' | 'ADMIN' | 'SUPER_ADMIN') || 'ADMIN';
 
     console.log(`DAL: Bypass activo. Sesión inyectada para User ID: ${devUserId}, Email: ${devUserEmail}`);
     return {
@@ -60,7 +61,7 @@ export const verifySession = cache(async () => {
     isAuth: true,
     userId: session.user.id,
     userEmail: session.user.email,
-    userRole: session.user.role as 'USER' | 'ADMIN' | 'SUPER_ADMIN', // Asegura el tipo del rol
+    userRole: session.user.role as 'BASIC' | 'PLUS' | 'PREMIUM' | 'PREMIUM_PLUS' | 'ADMIN' | 'SUPER_ADMIN', // Asegura el tipo del rol
   };
 });
 
@@ -79,7 +80,7 @@ export async function getCurrentUser(): Promise<User | null> {
           id: userId,
           name: 'Dev Bypass User',
           email: (process.env.DEV_USER_EMAIL as string) || 'dev-dal-default@example.com',
-          role: (process.env.DEV_USER_ROLE as 'USER' | 'ADMIN' | 'SUPER_ADMIN') || 'ADMIN',
+          role: (process.env.DEV_USER_ROLE as 'BASIC' | 'PLUS' | 'PREMIUM' | 'PREMIUM_PLUS' | 'ADMIN' | 'SUPER_ADMIN') || 'ADMIN',
       } as User;
   }
 
@@ -104,12 +105,12 @@ export async function getCurrentUser(): Promise<User | null> {
             id: userId,
             name: 'Dev Bypass User (from DB check)',
             email: (process.env.DEV_USER_EMAIL as string) || 'dev-dal-default@example.com',
-            role: (process.env.DEV_USER_ROLE as 'USER' | 'ADMIN' | 'SUPER_ADMIN') || 'ADMIN',
+            role: (process.env.DEV_USER_ROLE as 'BASIC' | 'PLUS' | 'PREMIUM' | 'PREMIUM_PLUS' | 'ADMIN' | 'SUPER_ADMIN') || 'ADMIN',
         } as User;
     }
 
 
-    return user;
+    return user as User | null;
   } catch (error) {
     console.error('DAL: getCurrentUser error (DB not connected or query failed):', error);
     // Si la DB no está conectada, esto se disparará.
@@ -122,13 +123,16 @@ export async function getCurrentUser(): Promise<User | null> {
  * Check if user has required role
  * Use this for role-based access control (RBAC)
  */
-export async function requireRole(requiredRole: 'USER' | 'ADMIN' | 'SUPER_ADMIN') {
+export async function requireRole(requiredRole: 'BASIC' | 'PLUS' | 'PREMIUM' | 'PREMIUM_PLUS' | 'ADMIN' | 'SUPER_ADMIN') {
   const { userRole } = await verifySession(); // verifySession ya maneja bypass
 
   const roleHierarchy = {
-    'USER': 0,
-    'ADMIN': 1,
-    'SUPER_ADMIN': 2,
+    'BASIC': 0,
+    'PLUS': 1,
+    'PREMIUM': 2,
+    'PREMIUM_PLUS': 3,
+    'ADMIN': 4,
+    'SUPER_ADMIN': 5,
   };
 
   // Asegura que userRole es un tipo válido antes de acceder a roleHierarchy

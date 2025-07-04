@@ -1,5 +1,5 @@
 // Test page to verify authentication bypass is working
-import { verifySession, getCurrentUser } from '@/lib/dal';
+import { verifySession, getCurrentUser } from '@/lib/auth/dal';
 
 export default async function TestAuthPage() {
   try {
